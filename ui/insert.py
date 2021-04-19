@@ -1,0 +1,113 @@
+import ui.rsc_rc
+from PySide2 import QtCore, QtGui, QtWidgets
+
+
+class Ui_insert(object):
+    def setupUi(self, insert):
+        insert.setObjectName("insert")
+        insert.resize(971, 675)
+        insert.setStyleSheet("QWidget#centralwidget\n"
+                             "{\n"
+                             "background-color: rgb(255, 255, 255);\n"
+                             "}")
+        self.centralwidget = QtWidgets.QWidget(insert)
+        self.centralwidget.setObjectName("centralwidget")
+        self.update = QtWidgets.QToolButton(self.centralwidget)
+        self.update.setGeometry(QtCore.QRect(760, 20, 200, 180))
+        self.update.setText("")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/img/del.png"),
+                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.update.setIcon(icon)
+        self.update.setIconSize(QtCore.QSize(240, 180))
+        self.update.setAutoRaise(True)
+        self.update.setObjectName("update")
+        self.photograph = QtWidgets.QToolButton(self.centralwidget)
+        self.photograph.setGeometry(QtCore.QRect(760, 210, 200, 180))
+        self.photograph.setText("")
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/img/photograph.png"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.photograph.setIcon(icon1)
+        self.photograph.setIconSize(QtCore.QSize(240, 180))
+        self.photograph.setAutoRaise(True)
+        self.photograph.setObjectName("photograph")
+        self.gather = QtWidgets.QToolButton(self.centralwidget)
+        self.gather.setGeometry(QtCore.QRect(760, 410, 200, 180))
+        self.gather.setText("")
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap(":/img/add.png"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.gather.setIcon(icon2)
+        self.gather.setIconSize(QtCore.QSize(240, 180))
+        self.gather.setAutoRaise(True)
+        self.gather.setObjectName("gather")
+        self.out = QtWidgets.QToolButton(self.centralwidget)
+        self.out.setGeometry(QtCore.QRect(790, 590, 150, 60))
+        self.out.setText("")
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap(":/img/out.png"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.out.setIcon(icon3)
+        self.out.setIconSize(QtCore.QSize(147, 70))
+        self.out.setAutoRaise(True)
+        self.out.setObjectName("out")
+        self.num = QtWidgets.QLabel(self.centralwidget)
+        self.num.setGeometry(QtCore.QRect(10, 570, 345, 75))
+        self.num.setText("")
+        self.num.setPixmap(QtGui.QPixmap(":/img/num_in.png"))
+        self.num.setObjectName("num")
+        self.name = QtWidgets.QLabel(self.centralwidget)
+        self.name.setGeometry(QtCore.QRect(410, 570, 345, 75))
+        self.name.setText("")
+        self.name.setPixmap(QtGui.QPixmap(":/img/name_in.png"))
+        self.name.setObjectName("name")
+        self.num_text = QtWidgets.QLineEdit(self.centralwidget)
+        self.num_text.setGeometry(QtCore.QRect(120, 590, 180, 33))
+        self.num_text.setStyleSheet("font: 25px \"微软雅黑\";\n"
+                                    "color: rgb(112, 112, 112);")
+        self.num_text.setText("")
+        self.num_text.setFrame(False)
+        self.num_text.setObjectName("num_text")
+        self.name_text = QtWidgets.QLineEdit(self.centralwidget)
+        self.name_text.setGeometry(QtCore.QRect(530, 590, 180, 33))
+        self.name_text.setStyleSheet("font: 25px \"微软雅黑\";\n"
+                                     "color: rgb(112, 112, 112);")
+        self.name_text.setText("")
+        self.name_text.setFrame(False)
+        self.name_text.setObjectName("name_text")
+        self.camera = QtWidgets.QLabel(self.centralwidget)
+        self.camera.setGeometry(QtCore.QRect(70, 50, 641, 481))
+        self.camera.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.camera.setText("")
+        self.camera.setObjectName("camera")
+        self.pushButton_2 = QtWidgets.QToolButton(self.centralwidget)
+        self.pushButton_2.setGeometry(QtCore.QRect(760, 410, 200, 180))
+        self.pushButton_2.setText("")
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap(":/img/no.png"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pushButton_2.setIcon(icon4)
+        self.pushButton_2.setIconSize(QtCore.QSize(240, 180))
+        self.pushButton_2.setAutoRaise(True)
+        self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton = QtWidgets.QToolButton(self.centralwidget)
+        self.pushButton.setGeometry(QtCore.QRect(760, 20, 200, 180))
+        self.pushButton.setText("")
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap(":/img/yes.png"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pushButton.setIcon(icon5)
+        self.pushButton.setIconSize(QtCore.QSize(240, 180))
+        self.pushButton.setAutoRaise(True)
+        self.pushButton.setObjectName("pushButton")
+        insert.setCentralWidget(self.centralwidget)
+
+        self.retranslateUi(insert)
+        QtCore.QMetaObject.connectSlotsByName(insert)
+
+    def retranslateUi(self, insert):
+        _translate = QtCore.QCoreApplication.translate
+        insert.setWindowTitle(_translate("insert", "MainWindow"))
+        self.num_text.setPlaceholderText(_translate("insert", "请输入学号"))
+        self.name_text.setPlaceholderText(_translate("insert", "请输入姓名"))

@@ -1,15 +1,16 @@
 {
     // 避免在使用这些终端命令时激活虚拟环境和conda环境,但是有的时候需要自己使用canda activate env
-    "python.terminal.activateEnvironment": false,
+    "python.terminal.activateEnvironment": true,
     // code-runner插件运行在终端上
     "code-runner.runInTerminal": true,
     // python配置，python.exe编译器的位置
-    "python.pythonPath": "C:\\Anaconda3\\envs\\data\\python.exe",
+    "python.pythonPath": "C:\\Anaconda3\\envs\\python37\\python.exe",
     // 屏蔽指定的警告
     "python.linting.flake8Args": [
         "--extend-ignore = F403, F405"
     ],
     "python.analysis.disabled": [
         "unresolved-import"
-    ]
+    ],
+    "python.formatting.provider": "autopep8"
 }
