@@ -4,7 +4,7 @@ import tensorflow as tf
 from keras.layers import Activation, Conv2D, Dense, Flatten, Input, MaxPool2D, Permute, Reshape
 from keras.layers.advanced_activations import PReLU
 from keras.models import Model, Sequential
-from utils import utils
+import utils
 
 
 #-----------------------------#
@@ -113,7 +113,7 @@ def create_Onet(weight_path):
     model.load_weights(weight_path, by_name=True)
     return model
 
-class mtcnn():
+class MTCNN():
     def __init__(self):
         self.Pnet = create_Pnet('model/pnet.h5')
         self.Rnet = create_Rnet('model/rnet.h5')

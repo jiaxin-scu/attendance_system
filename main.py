@@ -1,20 +1,19 @@
 from ui.init import Ui_init
-import operate_
-import insert_
-import check_in
+import recorder
+import insert_the_information
+import punch_card
 from PySide2.QtWidgets import QApplication, QMainWindow
 from PySide2.QtGui import QPalette, QBrush, QPixmap, QIcon
 import sys
 import time
 import pymysql
 from datetime import datetime
-import first
+from utils import update_face_embeddings
 
-first.update_face_embeddings()
-
-# 打开数据库连接
-conn = pymysql.connect(host="localhost", user="root", passwd="123456", db="punched_card", charset="utf8")
+update_face_embeddings()
+conn = pymysql.connect(host="localhost", user="root",passwd="123456", db="punched_card", charset="utf8")
 cursor = conn.cursor()
+
 
 class initshow(QMainWindow, Ui_init):
     def __init__(self):
@@ -28,21 +27,19 @@ class initshow(QMainWindow, Ui_init):
 
     def turnToOperate(self):
         global operate
-        operate = operate_.operateshow()
+        operate = recorder.operateshow()
         self.close()
         operate.show()
 
-
     def turnToInsert(self):
         global insert
-        insert = insert_.WinInsert()
+        insert = insert_the_information.WinInsert()
         self.close()
         insert.show()
 
-
     def turnTocheckon(self):
         global checkon
-        checkon = check_in.WinCheck()
+        checkon = punch_card.WinCheck()
         self.close()
         checkon.show()
 

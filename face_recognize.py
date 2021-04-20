@@ -2,15 +2,14 @@ import os
 import pickle
 import cv2
 import numpy as np
-import utils.utils as utils
-from net.inception import InceptionResNetV1
-from net.mtcnn import mtcnn
+import utils
+from inception import InceptionResNetV1
+import mtcnn
 
 
 class face_rec():
     def __init__(self):
-
-        self.mtcnn_model = mtcnn()
+        self.mtcnn_model = mtcnn.MTCNN()
         self.threshold = [0.5, 0.6, 0.8]
         self.facenet_model = InceptionResNetV1()
         model_path = 'model/facenet_keras.h5'
@@ -19,9 +18,7 @@ class face_rec():
         with open('model/face_date.pkl', 'rb') as fr:
             data = pickle.load(fr)
         self.known_face_encodings = data[0]
-        # print(type(self.known_face_encodings))
         self.known_face_names = data[1]
-        # print(type(self.known_face_names))
 
 
     def recognize(self, draw, flag = True):
@@ -100,7 +97,7 @@ class face_rec():
 
 ddd = face_rec()
 
-mtcnn_model = mtcnn()
+mtcnn_model = mtcnn.MTCNN()
 threshold = [0.5, 0.6, 0.8]
 facenet_model = InceptionResNetV1()
 model_path = 'model/facenet_keras.h5'
@@ -139,23 +136,6 @@ def return_name(img):
 
 
 if __name__ == "__main__":
-    # dududu = face_rec()
-    # video_capture = cv2.VideoCapture(r"E:\Pycharm Projects\DeepLearning\tttt\output1.avi")
-    # ret, draw = video_capture.read()
-    # writer = cv2.VideoWriter('output__1.avi', cv2.VideoWriter_fourcc('X', 'V', 'I', 'D'), 30, (640, 480))
-    # while ret:
-    #
-    #     # draw = cv2.flip(draw, 1)
-    #     dududu.recognize(draw)
-    #
-    #     # cv2.imshow('Video', draw)
-    #     writer.write(draw)
-    #     if cv2.waitKey(25) & 0xFF == ord('q'):
-    #         break
-    #     ret, draw = video_capture.read()
-    #
-    # video_capture.release()
-    # cv2.destroyAllWindows()
     dududu = face_rec()
     video_capture = cv2.VideoCapture(0)
     dududu = face_rec()

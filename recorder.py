@@ -4,7 +4,7 @@ from PySide2.QtGui import QPalette, QBrush, QPixmap, QIcon
 import sys
 import pymysql
 from datetime import datetime
-import init_
+import main
 from PySide2.QtWidgets import *
 import numpy as np
 import matplotlib.pyplot as plt
@@ -25,10 +25,8 @@ class operateshow(QMainWindow, Ui_operate):
         self.setFixedSize(1000, 675)
         # 查询学生近10天的打卡信息
         self.search.clicked.connect(self.findstudent)
-
         # 查询今天的打卡信息
         self.today.clicked.connect(self.getstudent)
-
         # 退出
         self.out.clicked.connect(self.turntoinit)
 
@@ -39,7 +37,6 @@ class operateshow(QMainWindow, Ui_operate):
         # 按钮禁用
         self.search.setEnabled(False)
         self.today.setEnabled(True)
-
         self.list1.setHorizontalHeaderLabels(['日期', '时间'])
         self.list2.setHorizontalHeaderLabels(['日期', '时间'])
 
@@ -50,7 +47,6 @@ class operateshow(QMainWindow, Ui_operate):
                 self.list1.removeRow(0)
         else:
             pass
-
         rownum = self.list2.rowCount()
         print("aaaaaaa", rownum)
         if rownum > 0:
@@ -58,7 +54,6 @@ class operateshow(QMainWindow, Ui_operate):
                 self.list2.removeRow(0)
         else:
             pass
-
         # 获取此人最近的到达时间、离开时间
         snum = self.num_text.text()
         print(snum)
@@ -68,8 +63,6 @@ class operateshow(QMainWindow, Ui_operate):
         studentstime = cursor.fetchall()  # 所有信息的元组
         arrives = [tple[2] for tple in studentstime[:10]]  # 只包含到达时间
         leaves = [tple[3] for tple in studentstime[:10]]  # 只包含离开时间
-        # print(arrives)
-        # print(leaves)
 
         # 提取arrive日期 并在table中显示
         i = 0
@@ -94,7 +87,6 @@ class operateshow(QMainWindow, Ui_operate):
             self.list2.setItem(i, 0, Otime)
             Otime = QTableWidgetItem(str(jtime))
             self.list2.setItem(i, 1, Otime)
-
 
 
     # 查询今天的打卡信息
@@ -165,6 +157,6 @@ class operateshow(QMainWindow, Ui_operate):
 
     def turntoinit(self):
         global init
-        init = init_.initshow()
+        init = main.initshow()
         self.close()
         init.show()

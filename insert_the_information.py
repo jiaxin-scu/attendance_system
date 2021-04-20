@@ -3,15 +3,15 @@ import sys
 import ui.insert as insert
 import cv2
 import datetime
-from net import mtcnn
-import first
+import mtcnn
+from utils import update_face_embeddings
 from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtWidgets import *
 from PySide2.QtCore import *
 from PySide2.QtGui import QPalette, QBrush, QPixmap, QIcon
-from utils.face_recognize import ddd, return_name
+from face_recognize import ddd, return_name
 import matplotlib.pyplot as plt
-import init_
+import main
 import pymysql
 
 show = ''
@@ -20,7 +20,7 @@ show = ''
 conn = pymysql.connect(host="localhost", user="root", passwd="123456", db="punched_card", charset="utf8")
 cursor = conn.cursor()
 
-face_detector = mtcnn.mtcnn()
+face_detector = mtcnn.MTCNN()
 confidence_t = 0.99
 
 
@@ -39,7 +39,6 @@ class WinInsert(QMainWindow, insert.Ui_insert):
         self.setWindowTitle("编辑信息")
         self.setWindowIcon(QIcon(r'img\insert_on.png'))
         self.xx = 0
-        # self.setWindowIcon()
         self.cap = cv2.VideoCapture(0)
         self.pushButton.setVisible(False)
         self.pushButton.clicked.connect(self.ookk)
@@ -60,9 +59,7 @@ class WinInsert(QMainWindow, insert.Ui_insert):
 
     def show_camera(self):
         ret, self.image = self.cap.read()
-        # show = cv2.resize(self.image, (780, 500))
         show = cv2.flip(self.image, 1)
-        # show = cv2.cvtColor(show, cv2.COLOR_BGR2RGB)
         show = cv2.cvtColor(show, cv2.COLOR_BGR2RGB)
         showImage = QtGui.QImage(show.data, show.shape[1], show.shape[0], QtGui.QImage.Format_RGB888)
         self.camera.setPixmap(QtGui.QPixmap.fromImage(showImage))
@@ -70,7 +67,6 @@ class WinInsert(QMainWindow, insert.Ui_insert):
     def shoot(self):
         self.timer_camera.stop()
         ret, self.image = self.cap.read()
-        # show = cv2.resize(self.image, (780, 500))
         self.image = cv2.flip(self.image, 1)
         self.image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
         self.photograph.setEnabled(False)
@@ -101,8 +97,7 @@ class WinInsert(QMainWindow, insert.Ui_insert):
     def del_info(self):
         snum = self.num_text.text()
         sname = self.name_text.text()
-        sql_find = "SELECT * FROM `punched_card`.`student` WHERE `sno` = '{}' AND `name` = '{}' ORDER BY `sno` DESC".format(
-            snum, sname)
+        sql_find = "SELECT * FROM `punched_card`.`student` WHERE `sno` = '{}' AND `name` = '{}' ORDER BY `sno` DESC".format(snum, sname)
         cursor.execute(sql_find)
         lines = cursor.fetchall()
         if lines:
@@ -112,16 +107,13 @@ class WinInsert(QMainWindow, insert.Ui_insert):
             name = sname + ".jpg"
             path = os.path.join('dataset', name)
             os.remove(path)
-            # first.update_face_embeddings()
             QtWidgets.QMessageBox.information(self, u"Warning", u"删除成功！！", buttons=QtWidgets.QMessageBox.Ok, defaultButton=QtWidgets.QMessageBox.Ok)
         else:
             QtWidgets.QMessageBox.warning(self, u"Warning", u"请输入正确的学号和姓名！", buttons=QtWidgets.QMessageBox.Ok, defaultButton=QtWidgets.QMessageBox.Ok)
 
     def add_info(self):
         if self.xx == 0:
-            QtWidgets.QMessageBox.warning(self, u"Warning", u"请先拍照！",
-                                          buttons=QtWidgets.QMessageBox.Ok,
-                                          defaultButton=QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.warning(self, u"Warning", u"请先拍照！", buttons=QtWidgets.QMessageBox.Ok, defaultButton=QtWidgets.QMessageBox.Ok)
         else:
             snum = self.num_text.text()
             sname = self.name_text.text()
@@ -138,19 +130,12 @@ class WinInsert(QMainWindow, insert.Ui_insert):
                 plt.imsave(path, show)
                 cursor.execute("INSERT INTO student(sno, name, picture) VALUES ('{}', '{}', '{}')".format(snum, sname, path))
                 conn.commit()
-                # first.update_face_embeddings()
                 QtWidgets.QMessageBox.information(self, u"Warning", u"录入成功！", buttons=QtWidgets.QMessageBox.Ok, defaultButton=QtWidgets.QMessageBox.Ok)
 
     def toinit(self):
         global init
-        init = init_.initshow()
+        init = main.initshow()
         self.cap.release()
         self.close()
         init.show()
-        first.update_face_embeddings()
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    win = WinInsert()
-    win.show()
-    sys.exit(app.exec_())
+        update_face_embeddings()
