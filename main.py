@@ -61,4 +61,3 @@ if __name__ == "__main__":
         init = initshow(face_check, conn)
         init.show()
         sys.exit(app.exec_())
-        print("hehehe")

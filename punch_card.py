@@ -60,13 +60,12 @@ class WinCheck(QMainWindow, clock_in.Ui_checkon):
         ret, self.img = self.cap.read()
         self.img = cv2.flip(self.img, 1)
         name = self.face_check.recognize(self.img)
-        self.nameinfo_2.setText(name)  # 打印名字
         if name == "Unknown":
-            self.nameinfo_3.setText(name)
             self.timer_camera.start(30)
+            QMessageBox.information(self, '打卡提示', '没有识别出来！请重新打卡！', buttons=QtWidgets.QMessageBox.Ok, defaultButton=QtWidgets.QMessageBox.Ok)
         else:
+            self.nameinfo_2.setText(name)  # 打印名字
             self.return_sno = self.execute_float_sqlstr("select sno from student where name = '%s'" % name)
-            print(self.return_sno)
             self.nameinfo_3.setText(self.return_sno[0][0])
             self.photograph.setEnabled(False)  # setEnabled为false，该控件将不再响应，并且该控件会被重绘。对于Button来说，设置为false，控件会变灰不可点击。
 
@@ -110,6 +109,7 @@ class WinCheck(QMainWindow, clock_in.Ui_checkon):
         """
         下班打卡
         """
+        self.date_ = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d')
         self.date_str1 = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
         self.t24.setText(self.date_str1[11:16])
         t2 = datetime.datetime.now().time()

@@ -1,16 +1,12 @@
 import os
-import sys
 import ui.insert as insert
 import cv2
-import datetime
-import mtcnn
 from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtWidgets import *
 from PySide2.QtCore import *
 from PySide2.QtGui import QPalette, QBrush, QPixmap, QIcon
 import matplotlib.pyplot as plt
 import main
-import pymysql
 
 show = ''
 
@@ -123,7 +119,7 @@ class WinInsert(QMainWindow, insert.Ui_insert):
             self.cursor.execute(sql_delete)
             self.conn.commit()
             name = sname + ".jpg"
-            path = os.path.join('dataset', name)
+            path = os.path.join('data', name)
             os.remove(path)
             QtWidgets.QMessageBox.information(self, u"Warning", u"删除成功！！", buttons=QtWidgets.QMessageBox.Ok, defaultButton=QtWidgets.QMessageBox.Ok)
         else:
@@ -135,10 +131,12 @@ class WinInsert(QMainWindow, insert.Ui_insert):
         """
         if self.xx == 0:
             QtWidgets.QMessageBox.warning(self, u"Warning", u"请先拍照！", buttons=QtWidgets.QMessageBox.Ok, defaultButton=QtWidgets.QMessageBox.Ok)
+        elif not self.face_check.is_success(show):
+            QtWidgets.QMessageBox.warning(self, u"Warning", u"录入的照片不够清晰！", buttons=QtWidgets.QMessageBox.Ok, defaultButton=QtWidgets.QMessageBox.Ok)
         else:
             snum = self.num_text.text()
             sname = self.name_text.text()
-
+            face_check.known_face_names.append(sname)
             # 判断是否是已经录入的信息
             sql_find = "SELECT * FROM `punched_card`.`student` WHERE `sno` = {} ORDER BY `sno` DESC".format(snum)
             self.cursor.execute(sql_find)
@@ -147,7 +145,7 @@ class WinInsert(QMainWindow, insert.Ui_insert):
                 QtWidgets.QMessageBox.warning(self, u"Warning", u"请输入正确的学号和姓名！", buttons=QtWidgets.QMessageBox.Ok, defaultButton=QtWidgets.QMessageBox.Ok)
             else:
                 name = sname + ".jpg"
-                path = os.path.join('dataset', name)
+                path = os.path.join('data', name)
                 plt.imsave(path, show)
                 self.cursor.execute("INSERT INTO student(sno, name, picture) VALUES ('{}', '{}', '{}')".format(snum, sname, path))
                 self.conn.commit()
