@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import tensorflow as tf
 from keras.layers import Activation, Conv2D, Dense, Flatten, Input, MaxPool2D, Permute, Reshape
 from keras.layers.advanced_activations import PReLU
 from keras.models import Model, Sequential

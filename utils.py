@@ -1,12 +1,6 @@
 import math
-import sys
 import cv2
-import matplotlib.pyplot as plt
 import numpy as np
-import os
-import pickle
-from inception import InceptionResNetV1
-import mtcnn
 
 
 def calculateScales(img):

@@ -1,14 +1,10 @@
-import sys
 import ui.clock_in as clock_in
 import cv2
 import datetime
-import pymysql
 from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtWidgets import *
 from PySide2.QtCore import *
 from PySide2.QtGui import QPalette, QBrush, QPixmap, QIcon
-import face_recognize
-import matplotlib.pyplot as plt
 import main
 
 
@@ -61,8 +57,8 @@ class WinCheck(QMainWindow, clock_in.Ui_checkon):
         self.img = cv2.flip(self.img, 1)
         name = self.face_check.recognize(self.img)
         if name == "Unknown":
-            self.timer_camera.start(30)
             QMessageBox.information(self, '打卡提示', '没有识别出来！请重新打卡！', buttons=QtWidgets.QMessageBox.Ok, defaultButton=QtWidgets.QMessageBox.Ok)
+            self.timer_camera.start(30)
         else:
             self.nameinfo_2.setText(name)  # 打印名字
             self.return_sno = self.execute_float_sqlstr("select sno from student where name = '%s'" % name)
@@ -130,6 +126,7 @@ class WinCheck(QMainWindow, clock_in.Ui_checkon):
         """
         返回初始界面
         """
+        self.timer_camera.stop()
         global init 
         init = main.initshow(self.face_check, self.conn)
         self.cap.release()

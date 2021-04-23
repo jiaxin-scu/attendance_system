@@ -136,7 +136,7 @@ class WinInsert(QMainWindow, insert.Ui_insert):
         else:
             snum = self.num_text.text()
             sname = self.name_text.text()
-            face_check.known_face_names.append(sname)
+            self.face_check.known_face_names.append(sname)
             # 判断是否是已经录入的信息
             sql_find = "SELECT * FROM `punched_card`.`student` WHERE `sno` = {} ORDER BY `sno` DESC".format(snum)
             self.cursor.execute(sql_find)

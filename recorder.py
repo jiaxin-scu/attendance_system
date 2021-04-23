@@ -1,13 +1,9 @@
 from ui.operate import Ui_operate
 from PySide2.QtWidgets import QApplication, QMainWindow
 from PySide2.QtGui import QPalette, QBrush, QPixmap, QIcon
-import sys
-import pymysql
 from datetime import datetime
 import main
 from PySide2.QtWidgets import *
-import numpy as np
-import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FC
 from PySide2.QtWidgets import QApplication, QPushButton, QMainWindow, QVBoxLayout, QWidget
 
