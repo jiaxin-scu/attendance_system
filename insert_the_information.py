@@ -11,9 +11,7 @@ import main
 show = ''
 
 def get_face(img, box):
-    """
-    获取脸部框图
-    """
+    """Get a face block diagram"""
     x1, y1, width, height = box
     x1, y1 = abs(x1), abs(y1)
     x2, y2 = x1 + width, y1 + height
@@ -23,8 +21,11 @@ def get_face(img, box):
 
 class WinInsert(QMainWindow, insert.Ui_insert):
     def __init__(self, face_check, conn):
-        """
-        界面初始化
+        """Interface initialization
+
+        Args:
+            face_check (face_rec): Face recognition object
+            conn ([type]): Database connection object
         """
         super().__init__()
         self.setupUi(self)

@@ -63,13 +63,19 @@ def _inception_resnet_block(x, scale, block_type, block_idx, activation='relu'):
 
 
 def InceptionResNetV1(input_shape=(160, 160, 3), classes=128, dropout_keep_prob=0.8):
-    """
-    FaceNet 主要用于验证人脸是否为同一个人，通过人脸识别这个人是谁。
-    FaceNet 的主要思想是把人脸图像映射到一个多维空间，通过空间距离表示人脸的相似度。
-    同个人脸图像的空间距离比较小，不同人脸图像的空间距离比较大。
-    这样通过人脸图像的空间映射就可以实现人脸识别，
-    FaceNet 中采用基于深度神经网络的图像映射方法和基于 triplets（三联子）的 loss 函数训练神经网络，
-    网络直接输出为 128 维度的向量空间。
+    """Facenet
+        Facenet is primarily used to verify that a person's face is the same person, recognizing who that person is by looking at his or her face.  
+        The main idea of Facenet is to map the face image to a multi-dimensional space and express the similarity of the face through the spatial distance.  
+        The spatial distance from individual face images is relatively small, while the spatial distance from different face images is relatively large.  
+        In this way, face recognition can be realized through the spatial mapping of face images,  In Facenet, image mapping method based on deep neural network and loss function based on Triplets are adopted to train neural network.  
+
+    Args:
+        input_shape (tuple, optional): Enter the size of the picture. Defaults to (160, 160, 3).
+        classes (int, optional): Dimension of output. Defaults to 128.
+        dropout_keep_prob (float, optional): The proportion of Dropout. Defaults to 0.8.
+
+    Returns:
+        Model: keras model
     """
     channel_axis = 3
     inputs = Input(shape=input_shape)
@@ -115,16 +121,16 @@ def InceptionResNetV1(input_shape=(160, 160, 3), classes=128, dropout_keep_prob=
         x = _inception_resnet_block(x, scale=0.2, block_type='Block8', block_idx=block_idx)
     x = _inception_resnet_block(x, scale=1., activation=None, block_type='Block8', block_idx=6)
 
-    # 平均池化
+    # The average pooling
     x = GlobalAveragePooling2D(name='AvgPool')(x)
     x = Dropout(1.0 - dropout_keep_prob, name='Dropout')(x)
 
-    # 全连接层到128
+    # Full connection layer to 128
     x = Dense(classes, use_bias=False, name='Bottleneck')(x)
     bn_name = _generate_layer_name('BatchNorm', prefix='Bottleneck')
     x = BatchNormalization(momentum=0.995, epsilon=0.001,scale=False, name=bn_name)(x)
 
-    # 创建模型
+    # create models
     model = Model(inputs, x, name='inception_resnet_v1')
 
     return model

@@ -12,5 +12,6 @@
     "python.analysis.disabled": [
         "unresolved-import"
     ],
-    "python.formatting.provider": "autopep8"
+    "python.formatting.provider": "autopep8",
+    "git.ignoreLimitWarning": true
 }
