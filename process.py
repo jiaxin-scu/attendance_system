@@ -30,10 +30,14 @@ def test_acc():
     print("acc: " + str(acc))
 
 
-def test_api():
+def test_api_post():
     response = requests.post("https://vignetting.work/record" + "?studentId=1&classRoomId=1")
     result = response.json()
     print(result)
 
+def test_api_get():
+    response = requests.get("https://vignetting.work/student/" + "1")
+    result = response.json()
+    print(result)
 
 update()

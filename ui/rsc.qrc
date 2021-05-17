@@ -1,25 +1,24 @@
 <RCC>
-    <qresource prefix="/">
-        <file>img/morning.jpg</file>
-        <file>img/name.png</file>
-        <file>img/night.jpg</file>
-        <file>img/num.png</file>
-        <file>img/checkon.png</file>
-        <file>img/insert.png</file>
-        <file>img/tody.png</file>
-        <file>img/del.png</file>
-        <file>img/find.png</file>
-        <file>img/list.png</file>
-        <file>img/name_in.png</file>
-        <file>img/num_in.png</file>
-        <file>img/update.png</file>
-        <file>img/photograph.png</file>
-        <file>img/on_duty.png</file>
-        <file>img/ring_out.png</file>
-        <file>img/record.png</file>
-        <file>img/add.png</file>
-        <file>img/yes.png</file>
-        <file>img/no.png</file>
-        <file>img/out.png</file>
-    </qresource>
+  <qresource prefix="/">
+    <file>img/backgrand.png</file>
+    <file>img/banji.jpg</file>
+    <file>img/charu_icon.png</file>
+    <file>img/chazhao.png</file>
+    <file>img/daka_icon.png</file>
+    <file>img/fanhui.png</file>
+    <file>img/history_icon.png</file>
+    <file>img/init_icon.png</file>
+    <file>img/kaishi.png</file>
+    <file>img/kaoqin.png</file>
+    <file>img/liebiao.png</file>
+    <file>img/luru.png</file>
+    <file>img/lururenlian.png</file>
+    <file>img/meiyoulurerenlian.png</file>
+    <file>img/mingzi.png</file>
+    <file>img/paizhao.png</file>
+    <file>img/shiyongshuoming.png</file>
+    <file>img/tingzhi.png</file>
+    <file>img/tuichu.png</file>
+    <file>img/xuehao.png</file>
+  </qresource>
 </RCC>

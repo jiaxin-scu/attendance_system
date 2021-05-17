@@ -9,7 +9,6 @@ import mtcnn
 
 class face_rec():
     """Face recognition of the main classes"""
-    
 
     def __init__(self):
         """ initialization
@@ -25,13 +24,17 @@ class face_rec():
         self.known_face_names = []
 
         # Import face library face_date.pkl
-        with open('data/face_date_1.pkl', 'rb') as fr:
-            try:
-                data = pickle.load(fr)
-                self.known_face_encodings = data[0]
-                self.known_face_names = data[1]
-            except EOFError:
-                print("face_date.pkl文件为空")
+        if os.path.exists('model/face_date.pkl'):
+            with open('model/face_date.pkl', 'rb') as fr:
+                try:
+                    data = pickle.load(fr)
+                    self.known_face_encodings = data[0]
+                    self.known_face_names = data[1]
+                except EOFError:
+                    print("face_date.pkl文件为空")
+        else:
+            with open("model/face_date.pkl", mode='w', encoding='utf-8') as ff:
+                pass
 
     def is_success(self, draw):
         """Determine whether the face input is valid"""
@@ -39,7 +42,7 @@ class face_rec():
         rectangles = self.mtcnn_model.detectFace(draw, self.threshold)
         if len(rectangles) == 0:
             return False
-        
+
         # Convert to a square
         rectangles = utils.rect2square(np.array(rectangles, dtype=np.int32))
         rectangles[:, [0, 2]] = np.clip(rectangles[:, [0, 2]], 0, width)
@@ -49,13 +52,33 @@ class face_rec():
         rectangle = rectangles[0]
         landmark = np.reshape(rectangle[5:15], (5, 2)) - np.array([int(rectangle[0]), int(rectangle[1])])
         crop_img = draw[int(rectangle[1]):int(rectangle[3]), int(rectangle[0]):int(rectangle[2])]
-        crop_img, _ = utils.Alignment_1(crop_img, landmark)  # Face alignment is carried out using face key points
+
+        # Face alignment is carried out using face key points
+        crop_img, _ = utils.Alignment_1(crop_img, landmark)
         crop_img = np.expand_dims(cv2.resize(crop_img, (160, 160)), 0)
         face_encoding = utils.calc_128_vec(self.facenet_model, crop_img)  # Calculate 128 eigenvalues
         self.known_face_encodings.append(face_encoding)
 
         return True
-            
+
+    def draw_face(self, draw):
+        """Draw the frame of the face on top of the incoming image
+
+        Args:
+            draw (ndarray): The face image
+        """
+        height, width, _ = np.shape(draw)
+        draw_rgb = cv2.cvtColor(draw, cv2.COLOR_BGR2RGB)
+        rectangles = self.mtcnn_model.detectFace(draw_rgb, self.threshold)
+
+        if len(rectangles) != 0:
+            rectangles = utils.rect2square(np.array(rectangles, dtype=np.int32))
+            rectangles[:, [0, 2]] = np.clip(rectangles[:, [0, 2]], 0, width)
+            rectangles[:, [1, 3]] = np.clip(rectangles[:, [1, 3]], 0, height)
+            rectangle = rectangles[0]
+            left, top, right, bottom = rectangle[0], rectangle[1], rectangle[2], rectangle[3]
+            cv2.rectangle(draw, (left, top), (right, bottom), (0, 0, 255), 2)
+
     def recognize(self, draw):
         """Face recognition  
             Enter: a photo draw  
@@ -70,14 +93,13 @@ class face_rec():
         Returns:
             str: Face recognition results
         """
-
         height, width, _ = np.shape(draw)
         draw_rgb = cv2.cvtColor(draw, cv2.COLOR_BGR2RGB)
         rectangles = self.mtcnn_model.detectFace(draw_rgb, self.threshold)
 
         if len(rectangles) == 0:
             return "Unknown"
-        
+
         # Convert to a square
         rectangles = utils.rect2square(np.array(rectangles, dtype=np.int32))
         rectangles[:, [0, 2]] = np.clip(rectangles[:, [0, 2]], 0, width)
@@ -87,11 +109,13 @@ class face_rec():
         rectangle = rectangles[0]
         landmark = np.reshape(rectangle[5:15], (5, 2)) - np.array([int(rectangle[0]), int(rectangle[1])])
         crop_img = draw_rgb[int(rectangle[1]):int(rectangle[3]), int(rectangle[0]):int(rectangle[2])]
-        crop_img, _ = utils.Alignment_1(crop_img, landmark)  # Face alignment is carried out using face key points
+
+        # Face alignment is carried out using face key points
+        crop_img, _ = utils.Alignment_1(crop_img, landmark)
         crop_img = np.expand_dims(cv2.resize(crop_img, (160, 160)), 0)
         face_encoding = utils.calc_128_vec(self.facenet_model, crop_img)  # Calculate 128 eigenvalues
-            
-        # The 128 feature values were compared with the database's face data to calculate the score and select the nearest one  
+
+        # The 128 feature values were compared with the database's face data to calculate the score and select the nearest one
         face_distances = utils.face_distance(self.known_face_encodings, face_encoding)
         tolerance = 0.6
         name = "Unknown"
@@ -111,29 +135,30 @@ class face_rec():
 
         for face in face_list:
             name = face.split(".")[0]
-            if name == "face_date" or name == "face_date_1":
-                continue
             img = cv2.imread("data/" + face)
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-            rectangles = self.mtcnn_model.detectFace(img, self.threshold)  # To detect human faces
-            rectangles = utils.rect2square(np.array(rectangles))  # Convert to a square
+            rectangles = self.mtcnn_model.detectFace(
+                img, self.threshold)  # To detect human faces
+            rectangles = utils.rect2square(
+                np.array(rectangles))  # Convert to a square
             if len(rectangles):
                 rectangle = rectangles[0]
                 landmark = np.reshape(rectangle[5:15], (5, 2)) - np.array([int(rectangle[0]), int(rectangle[1])])
                 crop_img = img[int(rectangle[1]):int(rectangle[3]), int(rectangle[0]):int(rectangle[2])]
                 try:
                     crop_img, _ = utils.Alignment_1(crop_img, landmark)  # Landmark was used to correct the face
-                except cv2.error: 
+                except cv2.error:
                     print(face + "更新失败....")
                     continue
                 print(face + "...")
+                
                 crop_img = np.expand_dims(cv2.resize(crop_img, (160, 160)), 0)  # Facenet is going to pass in a 160x160 image
-                face_encoding = utils.calc_128_vec(self.facenet_model, crop_img)  # The detected face is passed into the Facenet model to realize the extraction of 128-dimensional feature vectors  
+                face_encoding = utils.calc_128_vec(self.facenet_model, crop_img)  # The detected face is passed into the Facenet model to realize the extraction of 128-dimensional feature vectors
                 known_face_encodings.append(face_encoding)
                 known_face_names.append(name)
                 face_name.append(known_face_encodings)
                 face_name.append(known_face_names)
-                with open("data/face_date.pkl", "wb") as f:
+                with open("model/face_date.pkl", "wb+") as f:
                     pickle.dump(face_name, f)
             else:
                 false_number += 1

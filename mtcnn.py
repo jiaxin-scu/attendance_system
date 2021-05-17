@@ -97,25 +97,25 @@ def create_Onet(weight_path):
 
 
 class MTCNN():
-    """
-    MTCNN 的作用是获取人脸图像框。
-    首先照片会按照不同的缩放比例，缩放成不同大小的图片，形成图片的特征金字塔。
-    PNet 主要获得了人脸区域的候选窗口和边界框的回归向量。并用该边界框做回归，对候选窗口进行校准，然后通过非极大值抑制（NMS）来合并高度重叠的候选框。
-    RNet 将经过 PNet 的候选框在 RNet 网络中训练，然后利用边界框的回归值微调候选窗体，再利用 NMS 去除重叠窗体。
-    ONet 功能与 RNet 作用类似，只是在去除重叠候选窗口的同时，同时显示五个人脸关键点定位（眼睛、嘴角、鼻尖）。
+    """What MTCNN does is get the face image frame.  
+        First of all, the photos will be scaled to different sizes according to different zoom ratios,forming the 
+    feature pyramid of the picture.  
+        PNET mainly obtains the candidate window and the regression vector of the boundary box in the face region.  
+    The candidate window is calibrated by using the bounding box regression, and then the highly overlapping 
+    candidate boxes are merged by non-maximum suppression (NMS).  
+        RNET will be trained in RNET network by PNET candidate box, and then use regression value of bounding box 
+    to fine tune candidate form, and use NMS to remove overlapping form.  
+        The function of ONET is similar to that of RNET, except that while removing overlapping candidate Windows, 
+    it displays the key points of five faces (eyes, mouth corners, nose tip) at the same time.   
     """
     def __init__(self):
-        """
-        初始化 MTCNN 网络，搭建 P-Net、R-Net、O-Net
-        """
+        """Initialize the MTCNN network and build P-Net, R-Net and O-Net"""
         self.Pnet = create_Pnet('model/pnet.h5')
         self.Rnet = create_Rnet('model/rnet.h5')
         self.Onet = create_Onet('model/onet.h5')
 
     def detectFace(self, img, threshold):
-        """
-        检测脸部，获取人脸检测框
-        """
+        """Detect the face and get the face detection box"""
         copy_img = (img.copy() - 127.5) / 127.5  # 归一化
         origin_h, origin_w, _ = copy_img.shape  # 原始图像大小
         scales = utils.calculateScales(img)  # 计算原始输入图像缩放的比例

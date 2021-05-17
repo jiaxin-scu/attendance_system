@@ -1,55 +1,43 @@
-from ui.init import Ui_init
-import recorder
-import insert_the_information
-import punch_card
+from ui.main_ui import Ui_init
 from PySide2.QtWidgets import QApplication, QMainWindow
-from PySide2.QtGui import QPalette, QBrush, QPixmap, QIcon
+from PySide2.QtGui import QIcon
 import sys
 import face_recognize
-import pymysql
+import insert_photos
+import punch_card
 
 
 class initshow(QMainWindow, Ui_init):
-    def __init__(self, face_check, conn):
-        """主界面初始化"""
+    def __init__(self, face_check):
         super().__init__()
         self.setupUi(self)
-        self.setWindowTitle("人脸打卡系统")
-        self.setWindowIcon(QIcon(r'img\init.png'))
+        self.setWindowTitle("基于人脸识别的考勤系统:主界面")
+        self.setWindowIcon(QIcon('ui/img/init_icon.png'))
         self.face_check = face_check
-        self.conn = conn
-        
-        # 三个点击事件
-        self.opt.clicked.connect(self.turnToOperate)
-        self.insertinfo.clicked.connect(self.turnToInsert)
-        self.checkon.clicked.connect(self.turnTocheckon)
-        
-    def turnToOperate(self):
-        """考勤记录界面"""
-        global operate
-        operate = recorder.operateshow(self.face_check, self.conn)
-        operate.show()
+
+        self.lururenlian.clicked.connect(self.turn_insert_photos)
+        self.kaoqin.clicked.connect(self.turn_check_on)
+        self.tuichu.clicked.connect(self.turn_out)
+
+    def turn_insert_photos(self):
+        global insert_windows
+        insert_windows = insert_photos.WinInsert(self.face_check)
+        insert_windows.show()
         self.close()
 
-    def turnToInsert(self):
-        """录入人脸信息界面"""
-        global insert
-        insert = insert_the_information.WinInsert(self.face_check, self.conn)
-        insert.show()
+    def turn_check_on(self):
+        global check_on_windows
+        check_on_windows = punch_card.WinCheck(self.face_check)
+        check_on_windows.show()
         self.close()
 
-    def turnTocheckon(self):
-        """打卡界面"""
-        global checkon
-        checkon = punch_card.WinCheck(self.face_check, self.conn)
-        checkon.show()
+    def turn_out(self):
         self.close()
 
 
 if __name__ == "__main__":
-        face_check = face_recognize.face_rec()
-        conn = pymysql.connect(host="localhost", user="root", passwd="123456", db="punched_card", charset="utf8")
-        app = QApplication(sys.argv)
-        init = initshow(face_check, conn)
-        init.show()
-        sys.exit(app.exec_())
+    face_check = face_recognize.face_rec()
+    app = QApplication(sys.argv)
+    init_windows = initshow(face_check)
+    init_windows.show()
+    sys.exit(app.exec_())
