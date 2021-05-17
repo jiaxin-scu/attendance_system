@@ -11,9 +11,7 @@ import pymysql
 
 class initshow(QMainWindow, Ui_init):
     def __init__(self, face_check, conn):
-        """
-        主界面初始化
-        """
+        """主界面初始化"""
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle("人脸打卡系统")
@@ -27,27 +25,21 @@ class initshow(QMainWindow, Ui_init):
         self.checkon.clicked.connect(self.turnTocheckon)
         
     def turnToOperate(self):
-        """
-        考勤记录界面
-        """
+        """考勤记录界面"""
         global operate
         operate = recorder.operateshow(self.face_check, self.conn)
         operate.show()
         self.close()
 
     def turnToInsert(self):
-        """
-        录入人脸信息界面
-        """
+        """录入人脸信息界面"""
         global insert
         insert = insert_the_information.WinInsert(self.face_check, self.conn)
         insert.show()
         self.close()
 
     def turnTocheckon(self):
-        """
-        打卡界面
-        """
+        """打卡界面"""
         global checkon
         checkon = punch_card.WinCheck(self.face_check, self.conn)
         checkon.show()

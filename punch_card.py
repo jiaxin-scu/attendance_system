@@ -9,10 +9,7 @@ import main
 
 
 class WinCheck(QMainWindow, clock_in.Ui_checkon):
-    """
-    打卡界面
-    """
-
+    """打卡界面"""
     def __init__(self, face_check, conn):
         super().__init__()
         self.setupUi(self)

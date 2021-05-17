@@ -25,7 +25,7 @@ class face_rec():
         self.known_face_names = []
 
         # Import face library face_date.pkl
-        with open('data/face_date.pkl', 'rb') as fr:
+        with open('data/face_date_1.pkl', 'rb') as fr:
             try:
                 data = pickle.load(fr)
                 self.known_face_encodings = data[0]
@@ -111,12 +111,13 @@ class face_rec():
 
         for face in face_list:
             name = face.split(".")[0]
-            if name == "face_date":
+            if name == "face_date" or name == "face_date_1":
                 continue
             img = cv2.imread("data/" + face)
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             rectangles = self.mtcnn_model.detectFace(img, self.threshold)  # To detect human faces
+            rectangles = utils.rect2square(np.array(rectangles))  # Convert to a square
             if len(rectangles):
-                rectangles = utils.rect2square(np.array(rectangles))  # Convert to a square
                 rectangle = rectangles[0]
                 landmark = np.reshape(rectangle[5:15], (5, 2)) - np.array([int(rectangle[0]), int(rectangle[1])])
                 crop_img = img[int(rectangle[1]):int(rectangle[3]), int(rectangle[0]):int(rectangle[2])]
@@ -124,7 +125,6 @@ class face_rec():
                     crop_img, _ = utils.Alignment_1(crop_img, landmark)  # Landmark was used to correct the face
                 except cv2.error: 
                     print(face + "更新失败....")
-                    os.remove("C:/Users/11566/Desktop/软件项目管理/attendance_system/data" + '/' + face)
                     continue
                 print(face + "...")
                 crop_img = np.expand_dims(cv2.resize(crop_img, (160, 160)), 0)  # Facenet is going to pass in a 160x160 image
@@ -135,7 +135,6 @@ class face_rec():
                 face_name.append(known_face_names)
                 with open("data/face_date.pkl", "wb") as f:
                     pickle.dump(face_name, f)
-                os.remove("C:/Users/11566/Desktop/软件项目管理/attendance_system/data" + '/' + face)
             else:
                 false_number += 1
                 print(face + "更新失败....")

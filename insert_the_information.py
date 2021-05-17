@@ -152,7 +152,7 @@ class WinInsert(QMainWindow, insert.Ui_insert):
                 self.conn.commit()
                 self.face_check.update_face_embeddings()
                 QtWidgets.QMessageBox.information(self, u"Warning", u"录入成功！", buttons=QtWidgets.QMessageBox.Ok, defaultButton=QtWidgets.QMessageBox.Ok)
-
+                
     def toinit(self):
         self.timer_camera.stop()
         global init

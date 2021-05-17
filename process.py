@@ -4,8 +4,6 @@ import cv2
 import requests
 
 
-
-
 def update():
     face_check = face_recognize.face_rec()
     face_check.update_face_embeddings()
@@ -38,4 +36,4 @@ def test_api():
     print(result)
 
 
-test_api()
+update()
