@@ -146,8 +146,7 @@ class MTCNN():
         rectangles = np.array(utils.NMS(rectangles, 0.7))  # 非极大抑制
 
         if len(rectangles) == 0:
-            print("没有检测到人脸")
-            return
+            return []
 
         #--------------------------------------#
         # Rnet部分：稍微精确计算人脸框

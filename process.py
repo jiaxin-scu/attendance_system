@@ -13,9 +13,9 @@ def test_acc():
     recognized_num = 0
     not_recognized_num = 0
     face_check = face_recognize.face_rec()
-    face_list = os.listdir("test")
+    face_list = os.listdir("data")
     for i in face_list:
-        img = cv2.imread("test/" + i)
+        img = cv2.imread("data/" + i)
         img = cv2.flip(img, 1)
         name = face_check.recognize(img)
         if name + ".jpg" == i:
@@ -24,6 +24,14 @@ def test_acc():
         else:
             not_recognized_num += 1
             print(i + " can not resognized.")
+        # if name == "Unknown":
+        #     not_recognized_num += 1
+        #     print(i + " can not resognized.")
+            
+        # else:
+        #     recognized_num += 1
+        #     print(i + " successfully resognized.")
+            
     acc = recognized_num / (recognized_num + not_recognized_num)
     print("recognized_num: " + str(recognized_num))
     print("not_recognized_num: " + str(not_recognized_num))

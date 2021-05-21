@@ -149,6 +149,7 @@ class face_rec():
                     crop_img, _ = utils.Alignment_1(crop_img, landmark)  # Landmark was used to correct the face
                 except cv2.error:
                     print(face + "更新失败....")
+                    false_number += 1
                     continue
                 print(face + "...")
                 

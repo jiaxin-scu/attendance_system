@@ -36,8 +36,7 @@ class WinCheck(QMainWindow, clock_in.Ui_checkon):
         # 检查摄像头
         flag = self.cap.open(0)
         if not flag:
-            msg = QtWidgets.QMessageBox.warning(
-                self, u"Warning", u"请检测相机与电脑是否连接正确", buttons=QtWidgets.QMessageBox.Ok, defaultButton=QtWidgets.QMessageBox.Ok)
+            msg = QtWidgets.QMessageBox.warning(self, u"Warning", u"请检测相机与电脑是否连接正确", buttons=QtWidgets.QMessageBox.Ok, defaultButton=QtWidgets.QMessageBox.Ok)
 
     def end_kaoqin(self):
         """The end of the attendance"""
@@ -75,38 +74,35 @@ class WinCheck(QMainWindow, clock_in.Ui_checkon):
     def my_face_recognize(self):
         draw = cv2.flip(self.image, 1)
         name = self.face_check.recognize(draw)
+        self.stu_id.setText(" ")
+        self.stu_name.setText(" ")
+        self.stu_major.setText(" ")
+        self.stu_age.setText(" ")
         if name == "Unknown":
             self.result.setText("没有识别成功！")
-            self.stu_id.setText(" ")
-            self.stu_name.setText(" ")
-            self.stu_major.setText(" ")
-            self.stu_age.setText(" ")
         else:
             try:
-                response_1 = requests.post("https://vignetting.work/record?studentId=" + str(name) + "&classRoomId=" + str(self.class_id))
-                result_1 = response_1.json()
-                if (result_1['code'] == 200):
-                    response_2 = requests.get("https://vignetting.work/student/" + str(name))
-                    result_2 = response_2.json()
-                    if (result_2['code'] == 200):
-                        stu_info = result_2['data']
-                        self.result.setText("打卡成功！")
-                        self.stu_id.setText(str(stu_info['id']))
-                        self.stu_name.setText(stu_info['name'])
-                        self.stu_major.setText(stu_info['major'])
-                        self.stu_age.setText(str(stu_info['age']))
-                        self.dakajilu(stu_info['name'])
+                response = requests.post("https://vignetting.work/record?studentId=" + str(name) + "&classRoomId=" + str(self.class_id))
+                result = response.json()
+                if (result['code'] == 200):
+                    stu_info = result['data']
+                    self.stu_id.setText(str(stu_info['id']))
+                    self.stu_name.setText(stu_info['name'])
+                    self.stu_major.setText(stu_info['major'])
+                    self.stu_age.setText(str(stu_info['age']))
+                    if result['msg'] == "学生已完成课程的打卡":
+                        self.result.setText("你已经完成本节课的打卡，不能重复打卡！")
+                    else:
+                        self.result.setText("打卡成功！") 
+                        self.dakajilu(stu_info['name'])    
                 else:
-                    self.result.setText("打卡失败，你不在上课名单中！")
-                    self.stu_id.setText(" ")
-                    self.stu_name.setText(" ")
-                    self.stu_major.setText(" ")
-                    self.stu_age.setText(" ")
+                    self.result.setText("打卡失败，你不在上课名单中！")   
             except requests.exceptions.ConnectionError:
                 self.result.setText("网络连接出现问题！")
 
     def dakajilu(self, name):
         date_str = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
-        self.list.setItem(self.num_of_record, 0, name)
-        self.list.setItem(self.num_of_record, 1,  QTableWidgetItem(date_str[11:16]))
+        self.list.insertRow(self.num_of_record)
+        self.list.setItem(self.num_of_record, 0, QTableWidgetItem(name))
+        self.list.setItem(self.num_of_record, 1,  QTableWidgetItem(date_str[11:19]))
         self.num_of_record += 1
